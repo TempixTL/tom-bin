@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# A simple wrapper for the google-chrome command
+
+if ! command -v "google-chrome" &>/dev/null; then
+  echo >&2 "Please install google-chrome to use this command."
+  echo >&2 "https://google.com/chrome"
+  exit 1
+fi
+
+urls=""
+flags=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|--help)
+      shift
+      echo "A simple wrapper for the google-chrome command."
+      echo
+      echo "Usage: chrome [-h|i] [-p PROFILE_NAME] [-s QUERY]... URLS..."
+      echo
+      echo "-h, --help        display this help and exit"
+      echo "-i, --incognito   open in an incognito window"
+      echo "-p, --profile     open with profile PROFILE_NAME (analogous to --profile-directory in google-chrome)"
+      echo "-s, --search      open QUERY as a google search query instead of url"
+      exit
+      ;;
+    -i|--incognito)
+      shift
+      flags="$flags --incognito"
+      ;;
+    -p|--profile)
+      shift
+      if [ $# -eq 0 ]; then
+        echo >&2 "no profile specified"
+        exit 1
+      fi
+      flags="$flags --profile-directory=\"$1\""
+      shift
+      ;;
+    -s|--search)
+      shift
+      if [ $# -eq 0 ]; then
+        echo >&2 "no search query specified"
+        exit 1
+      fi
+      urls="$urls \"google.com/search?q=$1\""
+      shift
+      ;;
+    *)
+      urls="$urls $1"
+      shift
+      ;;
+  esac
+done
+
+google_chrome_cmd="google-chrome $flags $urls"
+echo "$google_chrome_cmd"
+eval "nohup $google_chrome_cmd </dev/null &>/dev/null &"

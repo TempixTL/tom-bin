@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Preview a document (.md, .html, ect.) as a pdf
+
+# If pandoc isn't installed...
+if ! command -v "pandoc" &>/dev/null; then
+  echo >&2 "Please install pandoc to use this command."
+  echo >&2 "https://github.com/jgm/pandoc/releases/latest"
+  exit 1
+fi
+
+temp_dir="/tmp/prevpdf/"
+
+if [ ! -d "$temp_dir" ]; then
+  mkdir "$temp_dir"
+fi
+
+for file in "$@"; do
+  basename="${file%.*}"
+  basename="${basename##*/}"
+  file_pdf="$basename.pdf"
+
+  pandoc "$file" -o "$temp_dir/$file_pdf" && \
+    xdg-open "$temp_dir/$file_pdf"
+done

@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Takes a list of ports and opens them in a Chrome window on localhost
+
+if ! command -v "google-chrome" &>/dev/null; then
+  echo >&2 "Please install google-chrome to use this command."
+  echo >&2 "https://google.com/chrome"
+  exit 1
+fi
+
+urls=""
+while [ $# -gt 0 ]; do
+  urls="$urls http://localhost:$1"
+  shift
+done
+
+google_chrome_cmd="google-chrome --incognito $urls"
+echo "$google_chrome_cmd"
+eval "nohup $google_chrome_cmd </dev/null &>/dev/null &"
