@@ -3,6 +3,12 @@
 # Wrapper for screen which makes use of config files in ~/.config/screen to
 # automatically load layouts and reattach to sessions if possible
 
+if [ $# -eq 0 ]; then
+  exec screen "$@"
+fi
+
 session_name="$1"
+shift
 rc_file="$HOME/.config/screen/$session_name.screenrc"
+
 exec screen -c "$rc_file" -S "$session_name" -r -R -d "$@"
