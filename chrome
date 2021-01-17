@@ -2,11 +2,15 @@
 #
 # A simple wrapper for the google-chrome command
 
-if ! command -v "google-chrome" &>/dev/null; then
-  echo >&2 "Please install google-chrome to use this command."
-  echo >&2 "https://google.com/chrome"
-  exit 1
-fi
+google_chrome_cmd=""
+case "$(uname -s)" in
+  Darwin*)
+    google_chrome_cmd="open -na \"Google Chrome\" --args"
+    ;;
+  Linux*|*)
+    google_chrome_cmd="google-chrome"
+    ;;
+esac
 
 urls=""
 flags=""
@@ -53,6 +57,6 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-google_chrome_cmd="google-chrome $flags $urls"
+google_chrome_cmd="$google_chrome_cmd $flags $urls"
 echo "$google_chrome_cmd"
 eval "nohup $google_chrome_cmd </dev/null &>/dev/null &"
