@@ -1,2 +1,2 @@
 #!/bin/bash
-./chrome -p Personal "$@"
+chrome -p Personal "$@"
