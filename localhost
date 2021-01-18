@@ -8,4 +8,4 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-chrome --incognito "$urls"
+chrome --guest "$urls"
