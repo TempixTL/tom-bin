@@ -20,6 +20,16 @@ for file in "$@"; do
   basename="${basename##*/}"
   file_pdf="$basename.pdf"
 
+  open_cmd=""
+  case "$(uname -s)" in
+    Darwin*)
+      open_cmd="open"
+      ;;
+    Linux*|*)
+      open_cmd="xdg_open"
+      ;;
+  esac
+  
   pandoc "$file" -o "$temp_dir/$file_pdf" && \
-    xdg-open "$temp_dir/$file_pdf"
+    eval "$open_cmd $temp_dir/$file_pdf"
 done
